@@ -10,14 +10,13 @@ const deadColor = 'black';
 const scalingFactor = 5; // scales the scope down the bigger the number
 const screenWidth = (canvas.width / scalingFactor);
 const screenHeight = (canvas.height / scalingFactor);
-let speed = 10; // frames per second
+let speed = 10; // speed of program
 let startSim = false;
 let stopId; // ID to stop the animation loop
-let timeoutId;
+let timeoutId; // ID to clear the timeout counter
 let currentGameBoard = [];
 let pastGameBoard = [];
 
-// cell dead alive enum
 const State = {
 	Dead: 0,
 	Alive: 1
@@ -28,7 +27,6 @@ window.addEventListener("load", event =>
 	initCanvasBlack();
 });
 
-// event listener for start simulation click
 startButton.addEventListener("click", event =>
 {
 	startSim = true;
@@ -100,27 +98,12 @@ function updateGameBoard(gameBoard, copyGameBoard)
 	{
 		for(let x = 0; x < screenWidth; x++)
 		{
-			numAliveCells = 0;
+			numAliveCells = countNeighborCells(gameBoard, x, y);
 
-			for(let y0 = y - 1; y0 <= y + 1; y0++)
-			{
-				for(let x0 = x - 1; x0 <= x + 1; x0++)
-				{
-					if(!((y0 === y) && (x0 === x)))
-					{
-						if((y0 < screenHeight) && (y0 >= 0))
-						{
-							if((x0 < screenWidth) && (x0 >= 0))
-							{
-								if(gameBoard[y0][x0] === State.Alive) 
-								{
-									numAliveCells += 1;
-								}
-							}
-						}
-					}
-				}
-			}
+			/*numAliveCells += gameBoard[y - 1][x - 1] + gameBoard[y - 1][x] +
+				gameBoard[y - 1][x + 1] + gameBoard[y][x - 1] + 
+				gameBoard[y][x + 1] + gameBoard[y + 1][x - 1] +
+				gameBoard[y + 1][x] + gameBoard[y + 1][x + 1];*/
 
 			if(gameBoard[y][x] === State.Alive)
 			{
@@ -144,6 +127,34 @@ function updateGameBoard(gameBoard, copyGameBoard)
 
 
 	copyCurrentGameBoard(copyGameBoard, gameBoard);
+}
+
+function countNeighborCells(gameBoard, x, y)
+{
+
+	let numAliveCells = 0;
+	let withinBounds;
+	let notSelf;
+
+	for(let y0 = y - 1; y0 <= y + 1; y0++)
+	{
+		for(let x0 = x - 1; x0 <= x + 1; x0++)
+		{
+			notSelf = !(y0 === y && x0 === x);
+
+			if(notSelf)
+			{
+				withinBounds = (y0 < screenHeight && y0 >= 0) && (x0 < screenWidth && x0 >= 0);
+
+				if(withinBounds)
+				{
+					numAliveCells += gameBoard[y0][x0]
+				}
+			}
+		}
+	}
+
+	return numAliveCells;
 }
 
 function randomizeGameBoard(gameBoard)
