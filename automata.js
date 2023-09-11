@@ -3,15 +3,19 @@
 const canvas = document.getElementById('canvas');
 const canvasContext = canvas.getContext('2d');
 const startButton = document.getElementById('start');
-const stopButton = document.getElementById('stop');
+const pauseButton = document.getElementById('pause');
+const speedSlider = document.getElementById('speedSlider');
 const aliveColor = 'green';
 const deadColor = 'black';
-const scalingFactor = 10;
+const scalingFactor = 5; // scales the scope down the bigger the number
 const screenWidth = (canvas.width / scalingFactor);
 const screenHeight = (canvas.height / scalingFactor);
-const speed = 10; // frames per second
+let speed = 10; // frames per second
 let startSim = false;
 let stopId; // ID to stop the animation loop
+let timeoutId;
+let currentGameBoard = [];
+let pastGameBoard = [];
 
 // cell dead alive enum
 const State = {
@@ -19,32 +23,48 @@ const State = {
 	Alive: 1
 }
 
+window.addEventListener("load", event =>
+{
+	initCanvasBlack();
+});
+
 // event listener for start simulation click
-startButton.addEventListener('click', event =>
+startButton.addEventListener("click", event =>
+{
+	startSim = true;
+	clearTimeout(timeoutId);
+	main();
+});
+
+pauseButton.addEventListener("click", event =>
 {
 	if(!startSim)
 	{
 		startSim = true;
-		main();
+		gameLoop(currentGameBoard, pastGameBoard);
 	}
-});
-
-stopButton.addEventListener('click', event =>
-{
-	if(startSim)
+	else if(startSim)
 	{
 		startSim = false;
 	}
 });
 
+speedSlider.oninput = function() {
+	speed = speedSlider.value;
+	document.getElementById('sliderLabel').innerText = "Speed: " + speed;
+}
+
 function main()
 {
-	let currentGameBoard = [];
-	let pastGameBoard = [];
 
 	randomizeGameBoard(currentGameBoard);
-
 	initCopyGameBoard(currentGameBoard, pastGameBoard);
+
+	// initially draw gameboard and then pause
+	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+	drawBoardToCanvas(currentGameBoard);
+	startSim = false;
+
 
 	// start game loop
 	stopId = window.requestAnimationFrame(function() { gameLoop(currentGameBoard, pastGameBoard); });
@@ -54,15 +74,23 @@ function gameLoop(gameBoard, copyGameBoard)
 {
 	if(startSim)
 	{
+		updateGameBoard(gameBoard, copyGameBoard);
 		canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 		drawBoardToCanvas(gameBoard);
-		updateGameBoard(gameBoard, copyGameBoard);
-		setTimeout(() => { window.requestAnimationFrame(function() { gameLoop(gameBoard, copyGameBoard); }); }, 1000 / speed);
+
+		// recursively call function
+		timeoutId = setTimeout(() => { window.requestAnimationFrame(function() { gameLoop(gameBoard, copyGameBoard); }); }, 1000 / speed);
 	}
 	else
 	{
 		cancelAnimationFrame(stopId);
 	}
+}
+
+function initCanvasBlack()
+{
+	canvasContext.fillStyle = deadColor;
+	canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function updateGameBoard(gameBoard, copyGameBoard)

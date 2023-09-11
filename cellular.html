@@ -6,10 +6,14 @@
 	<body>
 		<div style="text-align: center">
 			<h1>Javascript Game of Life</h1>
-			<canvas width="1000" height="1000" id="canvas" style="outline: black 3px solid;"></canvas>
+			<canvas width="1280" height="720" id="canvas" style="outline: black 3px solid;"></canvas>
 			<div style="text-align: center; margin: 20px;">
-				<button id='start'>Start Simulation</button>
-				<button id='stop'>Stop Simulation</button>
+				<button id='start'>Start/Restart</button>
+				<button id='pause'>Pause/Unpause</button>
+			</div>
+			<div>
+				<input id="speedSlider" autocomplete="off" type="range" min="1" max="120" value="15">
+				<div id="sliderLabel">Speed: 15</div>
 			</div>
 		</div>
 		<script src="automata.js"></script>
