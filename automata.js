@@ -1,17 +1,19 @@
-// Note to self, add start, pause button, restart, and clear
+// *NOTE* The next step to make this more efficient might be to initialize with an extra set of cells around the array, that way simple addition operations replace conditionals //
+// IMPORTANT DO NOT FORGET ^
+// I think also we could get rid of as much of the global variables as possible to make it more self contained
 
 const canvas = document.getElementById('canvas');
 const canvasContext = canvas.getContext('2d');
 const startButton = document.getElementById('start');
 const pauseButton = document.getElementById('pause');
 const speedSlider = document.getElementById('speedSlider');
-const aliveColor = 'green';
-const deadColor = 'black';
+const aliveColor = '#d5c4a1';
+const deadColor = '#504945';
 const scalingFactor = 5; // scales the scope down the bigger the number
 const screenWidth = (canvas.width / scalingFactor);
 const screenHeight = (canvas.height / scalingFactor);
 let speed = 10; // speed of program
-let startSim = false;
+let startSim = false; // flag to tell simulation to start/stop
 let stopId; // ID to stop the animation loop
 let timeoutId; // ID to clear the timeout counter
 let currentGameBoard = [];
@@ -93,6 +95,9 @@ function initCanvasBlack()
 
 function updateGameBoard(gameBoard, copyGameBoard)
 {
+	/* iterate over all cells and count neighbors to determine next state; copy new state
+	to current gameboard */
+
 	let numAliveCells;
 	for(let y = 0; y < screenHeight; y++)
 	{
@@ -159,6 +164,8 @@ function countNeighborCells(gameBoard, x, y)
 
 function randomizeGameBoard(gameBoard)
 {
+	// function randomizes and initializes gameboard
+
 	for(let y = 0; y < screenHeight; y++)
 	{
 		gameBoard[y] = [];
