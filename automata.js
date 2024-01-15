@@ -89,8 +89,13 @@ function gameLoop(gameBoard, copyGameBoard)
 
 function initCanvasBlack()
 {
-	canvasContext.fillStyle = deadColor;
-	canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+	for(let y = 0; y < screenHeight; y++)
+	{
+		for(let x = 0; x < screenWidth; x++)
+		{
+			drawCellDead(x, y);
+		}
+	}
 }
 
 function updateGameBoard(gameBoard, copyGameBoard)
