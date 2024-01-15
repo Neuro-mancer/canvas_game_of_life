@@ -31,5 +31,5 @@ Then, open the .html file with your browser.
 
 ## How To Use
 
-Currently the start/restart buttons initialize and populate the game board with a randomly selection of alive and dead cells. Once this has been pressed, you can press pause/unpause to start the simulation.
+Currently the start/restart buttons initialize and populate the game board with a random selection of alive and dead cells. Once this has been pressed, you can then press pause/unpause to start the simulation.
 The slider controls the speed of the simulation, although how fast you can go will largely depend on your computer's hardware.
