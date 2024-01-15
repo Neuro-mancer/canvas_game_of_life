@@ -17,7 +17,7 @@ canvas in the browser. Currently, the implementation has the following features:
 I plan on adding additional features as time goes on; however, this current version is stable
 and works well from what I have tested. The following features are planned:
 
-* Render a background grid on the canvas so the division of the cells in the simulation is more apparent
+* ~~Render a background grid on the canvas so the division of the cells in the simulation is more apparent~~
 * Add a mode where you can paint cell patterns on the grid to change the initial state/currently paused state
 * Optimizations to the game logic by making the conditionals and loops for checking alive neighbor cells and boundary conditions into a series of simple adding operations 
 * Give the observer the ability to change the color of the alive and dead cells on the grid

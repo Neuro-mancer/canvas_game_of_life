@@ -9,7 +9,7 @@ const pauseButton = document.getElementById('pause');
 const speedSlider = document.getElementById('speedSlider');
 const aliveColor = '#665c54';
 const deadColor = '#bdae93';
-const scalingFactor = 5; // scales the scope down the bigger the number
+const scalingFactor = 8; // scales the scope down the bigger the number
 const screenWidth = (canvas.width / scalingFactor);
 const screenHeight = (canvas.height / scalingFactor);
 let speed = 10; // speed of program
@@ -209,19 +209,27 @@ function drawBoardToCanvas(gameBoard)
 			switch(gameBoard[y][x])
 			{
 				case State.Dead:
-					drawCell(x, y, deadColor);
+					drawCellDead(x, y);
 					break;
 				case State.Alive:
-					drawCell(x, y, aliveColor);
+					drawCellAlive(x, y);
 					break;
 			}
 		}
 	}
 }
 
-function drawCell(x, y, color)
+function drawCellDead(x, y)
 {
-	canvasContext.fillStyle = color;
+	canvasContext.fillStyle = aliveColor;
+	canvasContext.fillRect(x * scalingFactor, y * scalingFactor, scalingFactor, scalingFactor);
+	canvasContext.fillStyle = deadColor;
 	canvasContext.fillRect(x * scalingFactor, y * scalingFactor, 
-		scalingFactor, scalingFactor);
+		scalingFactor * .80, scalingFactor * .80);
+}
+
+function drawCellAlive(x, y)
+{
+	canvasContext.fillStyle = aliveColor;
+	canvasContext.fillRect(x * scalingFactor, y * scalingFactor, scalingFactor, scalingFactor);
 }
