@@ -2,18 +2,19 @@
 <html>
 	<head>
 		<title>Cellular Automata</title>
+		<link rel="stylesheet" href="styles.css">
 	</head>
 	<body>
 		<div style="text-align: center">
 			<h1>Javascript Game of Life</h1>
-			<canvas width="1280" height="720" id="canvas" style="outline: black 3px solid;"></canvas>
+			<canvas width="1280" height="720" id="canvas"></canvas>
 			<div style="text-align: center; margin: 20px;">
 				<button id='start'>Start/Restart</button>
 				<button id='pause'>Pause/Unpause</button>
 			</div>
 			<div>
 				<input id="speedSlider" autocomplete="off" type="range" min="1" max="120" value="15">
-				<div id="sliderLabel">Speed: 15</div>
+				<div id="sliderLabel"><b>Speed: 15</b></div>
 			</div>
 		</div>
 		<script src="automata.js"></script>
