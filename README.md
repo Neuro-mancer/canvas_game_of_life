@@ -1,14 +1,12 @@
 # JavaScript and Canvas API Conway's Game of Life Implementation
 
-## Conway's Game of Life in browser written in vanilla JS utilizing the canvas API for graphical output
-
----
-
 This project is my personal implementation of the famous [Game of Life (read about it here)](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) cellular automaton created by mathematician John Conway.
 In essence there are cells in a matrix with a binary state attached to them, alive, or dead. Cells that are alive and have less than two alive neighbors die of "loneliness". If the cell is alive and has two or three alive neighbors
 then it lives. If an alive cell has more than three neighbors it dies of overcrowding, and if a dead cell has three neighbors it is born again.
 It was written in Javascript and utilizes the canvas API to draw simple 2D graphics of the cells (canvas really simplifies this!). I made this after learning about the game of life on a wiki walk and thinking how **easy** and fun it would be to implement using 
 canvas in the browser. Currently, the implementation has the following features:
+
+## Features
 
 * A start/restart button to populate the game board with a random assortment of "alive" and "dead" cells for an initial simulation state
 * A pause/unpause button to temporarily stop the simulation or resume it
