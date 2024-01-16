@@ -104,16 +104,11 @@ function updateGameBoard(gameBoard, copyGameBoard)
 	to current gameboard */
 
 	let numAliveCells;
-	for(let y = 0; y < screenHeight; y++)
+	for(let y = 1; y < screenHeight + 1; y++)
 	{
-		for(let x = 0; x < screenWidth; x++)
+		for(let x = 1; x < screenWidth + 1; x++)
 		{
 			numAliveCells = countNeighborCells(gameBoard, x, y);
-
-			/*numAliveCells += gameBoard[y - 1][x - 1] + gameBoard[y - 1][x] +
-				gameBoard[y - 1][x + 1] + gameBoard[y][x - 1] + 
-				gameBoard[y][x + 1] + gameBoard[y + 1][x - 1] +
-				gameBoard[y + 1][x] + gameBoard[y + 1][x + 1];*/
 
 			if(gameBoard[y][x] === State.Alive)
 			{
@@ -141,28 +136,10 @@ function updateGameBoard(gameBoard, copyGameBoard)
 
 function countNeighborCells(gameBoard, x, y)
 {
-
-	let numAliveCells = 0;
-	let withinBounds;
-	let notSelf;
-
-	for(let y0 = y - 1; y0 <= y + 1; y0++)
-	{
-		for(let x0 = x - 1; x0 <= x + 1; x0++)
-		{
-			notSelf = !(y0 === y && x0 === x);
-
-			if(notSelf)
-			{
-				withinBounds = (y0 < screenHeight && y0 >= 0) && (x0 < screenWidth && x0 >= 0);
-
-				if(withinBounds)
-				{
-					numAliveCells += gameBoard[y0][x0]
-				}
-			}
-		}
-	}
+	let numAliveCells = gameBoard[y - 1][x - 1] + gameBoard[y - 1][x] +
+		gameBoard[y - 1][x + 1] + gameBoard[y][x - 1] + 
+		gameBoard[y][x + 1] + gameBoard[y + 1][x - 1] +
+		gameBoard[y + 1][x] + gameBoard[y + 1][x + 1];
 
 	return numAliveCells;
 }
@@ -171,22 +148,29 @@ function randomizeGameBoard(gameBoard)
 {
 	// function randomizes and initializes gameboard
 
-	for(let y = 0; y < screenHeight; y++)
+	for(let y = 0; y < screenHeight + 2; y++)
 	{
 		gameBoard[y] = [];
 		
-		for(let x = 0; x < screenWidth; x++)
+		for(let x = 0; x < screenWidth + 2; x++)
 		{
-			gameBoard[y][x] = Math.round(Math.random());
+			if((x > 0 && x < screenWidth + 1) && (y > 0 && y < screenHeight + 1))
+			{
+				gameBoard[y][x] = Math.round(Math.random());
+			}
+			else
+			{
+				gameBoard[y][x] = 0;
+			}
 		}
 	}
 }
 
 function copyCurrentGameBoard(gameBoard, copyGameBoard)
 {
-	for(let y = 0; y < screenHeight; y++)
+	for(let y = 0; y < screenHeight + 2; y++)
 	{
-		for(let x = 0; x < screenWidth; x++)
+		for(let x = 0; x < screenWidth + 2; x++)
 		{
 			copyGameBoard[y][x] = gameBoard[y][x]; 
 		}
@@ -195,10 +179,10 @@ function copyCurrentGameBoard(gameBoard, copyGameBoard)
 
 function initCopyGameBoard(gameBoard, copyGameBoard)
 {
-	for(let y = 0; y < screenHeight; y++)
+	for(let y = 0; y < screenHeight + 2; y++)
 	{
 		copyGameBoard[y] = [];
-		for(let x = 0; x < screenWidth; x++)
+		for(let x = 0; x < screenWidth + 2; x++)
 		{
 			copyGameBoard[y][x] = gameBoard[y][x]; 
 		}
@@ -207,9 +191,9 @@ function initCopyGameBoard(gameBoard, copyGameBoard)
 
 function drawBoardToCanvas(gameBoard)
 {
-	for(let y = 0; y < screenHeight; y++)
+	for(let y = 1; y < screenHeight + 1; y++)
 	{
-		for(let x = 0; x < screenWidth; x++)
+		for(let x = 1; x < screenWidth + 1; x++)
 		{
 			switch(gameBoard[y][x])
 			{
