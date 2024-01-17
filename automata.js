@@ -4,11 +4,14 @@
 
 const canvas = document.getElementById('canvas');
 const canvasContext = canvas.getContext('2d');
-const startButton = document.getElementById('start');
 const pauseButton = document.getElementById('pause');
+const randomizeButton = document.getElementById('randomize');
+const clearButton = document.getElementById('clear');
 const speedSlider = document.getElementById('speedSlider');
 const aliveColor = '#665c54';
 const deadColor = '#bdae93';
+const coordColor = '#fabd2f';
+const coordOutlineColor = "#282828";
 const scalingFactor = 8; // scales the scope down the bigger the number
 const screenWidth = (canvas.width / scalingFactor);
 const screenHeight = (canvas.height / scalingFactor);
@@ -18,6 +21,8 @@ let stopId; // ID to stop the animation loop
 let timeoutId; // ID to clear the timeout counter
 let currentGameBoard = [];
 let pastGameBoard = [];
+let mouseX;
+let mouseY;
 
 const State = {
 	Dead: 0,
@@ -26,14 +31,29 @@ const State = {
 
 window.addEventListener("load", event =>
 {
-	initCanvasBlack();
+	initializeGameBoard(currentGameBoard);
+	initCopyGameBoard(currentGameBoard, pastGameBoard);
+	drawBoardToCanvas(currentGameBoard);
 });
 
-startButton.addEventListener("click", event =>
+randomizeButton.addEventListener("click", event =>
 {
-	startSim = true;
-	clearTimeout(timeoutId);
-	main();
+	randomizeGameBoard(currentGameBoard);
+	copyCurrentGameBoard(currentGameBoard, pastGameBoard);
+	if(!startSim){
+		drawBoardToCanvas(currentGameBoard);
+		drawMousePos(mouseX, mouseY);
+	}
+});
+
+clearButton.addEventListener("click", event =>
+{
+	clearGameBoard(currentGameBoard);
+	copyCurrentGameBoard(currentGameBoard, pastGameBoard);
+	if(!startSim){
+		drawBoardToCanvas(currentGameBoard);
+		drawMousePos(mouseX, mouseY);
+	}
 });
 
 pauseButton.addEventListener("click", event =>
@@ -41,11 +61,14 @@ pauseButton.addEventListener("click", event =>
 	if(!startSim)
 	{
 		startSim = true;
+		clearTimeout(timeoutId);
 		gameLoop(currentGameBoard, pastGameBoard);
 	}
-	else if(startSim)
+	else
 	{
 		startSim = false;
+		drawBoardToCanvas(currentGameBoard);
+		drawMousePos(mouseX, mouseY);
 	}
 });
 
@@ -54,14 +77,46 @@ speedSlider.oninput = function() {
 	document.getElementById('sliderLabel').innerText = "Speed: " + speed;
 }
 
+canvas.addEventListener("mousemove", event => 
+{
+	const rect = canvas.getBoundingClientRect();
+	const x = Math.floor((event.clientX - rect.left) / scalingFactor);
+	const y = Math.floor((event.clientY - rect.top) / scalingFactor);
+	mouseX = x;
+	mouseY = y;
+
+	if(!startSim)
+	{
+		drawBoardToCanvas(currentGameBoard);
+		drawMousePos(x, y);
+	}
+});
+
+canvas.addEventListener("mousedown", event =>{
+	if(!startSim)
+	{
+		currentGameBoard[mouseY + 1][mouseX + 1] = State.Alive;
+		pastGameBoard[mouseY + 1][mouseX + 1] = State.Alive;
+		drawBoardToCanvas(currentGameBoard);
+		drawMousePos(mouseX, mouseY);
+	}
+});
+
+function drawMousePos(x, y)
+{
+	const pauseState = !startSim;
+	const text = x.toString() + ", " + y.toString() + " Paused: " + pauseState.toString();
+	canvasContext.font = "bold 20px arial";
+	canvasContext.fillStyle = coordOutlineColor;
+	canvasContext.strokeText(text, 25, 25);
+	canvasContext.fillStyle = coordColor;
+	canvasContext.fillText(text, 25, 25);
+}
+
 function main()
 {
-
-	randomizeGameBoard(currentGameBoard);
-	initCopyGameBoard(currentGameBoard, pastGameBoard);
-
 	// initially draw gameboard and then pause
-	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+	// canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 	drawBoardToCanvas(currentGameBoard);
 	startSim = false;
 
@@ -75,8 +130,9 @@ function gameLoop(gameBoard, copyGameBoard)
 	if(startSim)
 	{
 		updateGameBoard(gameBoard, copyGameBoard);
-		canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+		// canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 		drawBoardToCanvas(gameBoard);
+		drawMousePos(mouseX, mouseY);
 
 		// recursively call function
 		timeoutId = setTimeout(() => { window.requestAnimationFrame(function() { gameLoop(gameBoard, copyGameBoard); }); }, 1000 / speed);
@@ -84,17 +140,6 @@ function gameLoop(gameBoard, copyGameBoard)
 	else
 	{
 		cancelAnimationFrame(stopId);
-	}
-}
-
-function initCanvasBlack()
-{
-	for(let y = 0; y < screenHeight; y++)
-	{
-		for(let x = 0; x < screenWidth; x++)
-		{
-			drawCellDead(x, y);
-		}
 	}
 }
 
@@ -150,18 +195,38 @@ function randomizeGameBoard(gameBoard)
 
 	for(let y = 0; y < screenHeight + 2; y++)
 	{
-		gameBoard[y] = [];
-		
 		for(let x = 0; x < screenWidth + 2; x++)
 		{
 			if((x > 0 && x < screenWidth + 1) && (y > 0 && y < screenHeight + 1))
 			{
 				gameBoard[y][x] = Math.round(Math.random());
 			}
-			else
+		}
+	}
+}
+
+function clearGameBoard(gameBoard)
+{
+	for(let y = 0; y < screenHeight + 2; y++)
+	{
+		for(let x = 0; x < screenWidth + 2; x++)
+		{
+			if((x > 0 && x < screenWidth + 1) && (y > 0 && y < screenHeight + 1))
 			{
 				gameBoard[y][x] = 0;
 			}
+		}
+	}
+}
+
+function initializeGameBoard(gameBoard)
+{
+	for(let y = 0; y < screenHeight + 2; y++)
+	{
+		gameBoard[y] = [];
+		for(let x = 0; x < screenWidth + 2; x++)
+		{
+			gameBoard[y][x] = 0;
 		}
 	}
 }
@@ -198,10 +263,10 @@ function drawBoardToCanvas(gameBoard)
 			switch(gameBoard[y][x])
 			{
 				case State.Dead:
-					drawCellDead(x, y);
+					drawCellDead(x - 1, y - 1);
 					break;
 				case State.Alive:
-					drawCellAlive(x, y);
+					drawCellAlive(x - 1, y - 1);
 					break;
 			}
 		}
@@ -222,3 +287,4 @@ function drawCellAlive(x, y)
 	canvasContext.fillStyle = aliveColor;
 	canvasContext.fillRect(x * scalingFactor, y * scalingFactor, scalingFactor, scalingFactor);
 }
+
