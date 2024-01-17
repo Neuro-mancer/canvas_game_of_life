@@ -8,10 +8,12 @@ canvas in the browser. Currently, the implementation has the following features:
 
 ## Features
 
-* A start/restart button to populate the game board with a random assortment of "alive" and "dead" cells for an initial simulation state
 * A pause/unpause button to temporarily stop the simulation or resume it
+* A randomize button to randomly place alive/dead cells on the current gameboard
+* A clear button to clear the gameboard of alive cells
 * A slider to change the speed of the simulation (speed may vary on your own hardware)
 * Grid to more easily denote dead and alive cells
+* Draw alive cells on the gameboard while paused
 
 ## Planned Features
 
@@ -19,11 +21,12 @@ I plan on adding additional features as time goes on; however, this current vers
 and works well from what I have tested. The following features are planned:
 
 * ~~Render a background grid on the canvas so the division of the cells in the simulation is more apparent~~
-* Add a mode where you can paint cell patterns on the grid to change the initial state/currently paused state
+* ~~Add a mode where you can paint cell patterns on the grid to change the initial state/currently paused state~~
 * ~~Optimizations to the game logic by making the conditionals and loops for checking alive neighbor cells and boundary conditions into a series of simple adding operations~~
-* Give the observer the ability to change the color of the alive and dead cells on the grid
-* A clear button to get rid of all alive cells on the board
+* ~~A clear button to get rid of all alive cells on the board~~
 * ~~Beautify the webpage and make it easy on the eyes~~
+* Give the observer the ability to change the color of the alive and dead cells on the grid
+* Improve drawing functionality
 
 ## How To Install
 
